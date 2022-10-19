@@ -1,26 +1,17 @@
 import { Router } from "express";
-import { getImage } from "../../utilities/images";
+import imagesController from "../controllers/images";
+
 const router = Router();
 
+//  GET main /images Route
 router.get("/images", (req, res) => {
   res.send(
-    "request /api/images/:image to get the full image \n" +
-      "or for example /api/images/:image?width=100&height=100 to get a scaled image"
+    "request /api/images/{image} to get the full image \n" +
+      "or /api/images/:image?width={width}&height={height} to get a scaled image"
   );
 });
 
-router.get('/images/:image', (req, res) => {
-  const imageName = req.params.image;
-
-  getImage(imageName).then(file => {
-    if(file !== undefined) {
-      res.status(200)
-      .set('Content-Type', 'image/jpeg')
-      .send(file);
-    }else{
-      res.status(404).send('Image not found.');
-    }
-  }).catch(e => console.log(e));
-});
+//  GET specific image
+router.get("/images/:image", imagesController.getImage);
 
 export default router;
