@@ -1,10 +1,8 @@
 import express from "express";
+import imagesRoute from "./routes/images";
 
 const app = express();
 
-app.get("/api", (req, res) => {
-  res.send("This is a test path.");
-  console.log("Test path was run.");
-});
+app.use("/api", imagesRoute);
 
 export default app;

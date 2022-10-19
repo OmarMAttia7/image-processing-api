@@ -8,6 +8,7 @@
     "lint:fix": "eslint src --fix",
     "format": "prettier src --write",
     "lint-format": "npm run lint:fix && npm run format",
+    "prebuild": "rm -r ./dist/*",
     "build": "tsc",
     "start": "node ./dist",
     "dev": "nodemon ./src/index.ts",
