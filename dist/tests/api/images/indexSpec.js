@@ -13,11 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const api_1 = __importDefault(require("../../api"));
-const request = (0, supertest_1.default)(api_1.default);
-describe("GET /api", () => {
-    it("responds with a 200 status", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield request.get("/api");
-        expect(response.status).toBe(200);
+const api_1 = __importDefault(require("../../../api"));
+const images_1 = require("../../../utilities/images");
+describe("api/images", () => {
+    const requset = (0, supertest_1.default)(api_1.default);
+    it("responds with status 200", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield requset.get("/api/images").expect(200);
+    }));
+    it("responds with full image", () => __awaiter(void 0, void 0, void 0, function* () {
+        const image = (0, images_1.getImage)("icelandwaterfall");
+        yield requset
+            .get("/api/images/icelandwaterfall")
+            .expect(200)
+            .expect("Content-Type", "image/jpeg")
+            .expect((res) => {
+            res.body = image;
+        });
     }));
 });
