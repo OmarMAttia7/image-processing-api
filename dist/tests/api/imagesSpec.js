@@ -14,15 +14,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const api_1 = __importDefault(require("../../api"));
-describe("api/images", () => {
+describe("/api/images", () => {
     const requset = (0, supertest_1.default)(api_1.default);
     it("responds with status 200", () => __awaiter(void 0, void 0, void 0, function* () {
         yield requset.get("/api/images").expect(200);
     }));
+    /*
+      TODO
+      - dynamically generate test image names to avoid test bugs if file names change
+    */
     it("responds with full image", () => __awaiter(void 0, void 0, void 0, function* () {
         yield requset
             .get("/api/images/icelandwaterfall")
             .expect(200)
             .expect("Content-Type", /image/);
+    }));
+    it("responds with status 404 if image is not found", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield requset.get("/api/images/doesntexist").expect(404);
     }));
 });
