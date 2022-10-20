@@ -12,24 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const getOriginalImage_1 = __importDefault(require("./getOriginalImage"));
-const getScaledImage_1 = __importDefault(require("./getScaledImage"));
-function getImage(req, res, next) {
+const getImageFile_1 = __importDefault(require("./getImageFile"));
+const sharp_1 = __importDefault(require("sharp"));
+function createScaledImage(image, width, height) {
     return __awaiter(this, void 0, void 0, function* () {
-        const width = req.query.width;
-        const height = req.query.height;
-        try {
-            // If width or height parameters are not present
-            // return full image
-            if (width === undefined || height === undefined) {
-                return yield (0, getOriginalImage_1.default)(req, res);
-            }
-            // If width and height parameters are present
-            next('route');
-        }
-        catch (e) {
-            res.status(500).send("Error 500: Internal server error.");
-        }
+        // Get original image
+        const originalImage = (yield (0, getImageFile_1.default)(image));
+        // Scale original image
+        const scaledImage = yield (0, sharp_1.default)(originalImage.file)
+            .resize(width, height)
+            .toBuffer();
+        // Return file and extension
+        return {
+            file: scaledImage,
+            extension: originalImage.extension
+        };
     });
 }
-exports.default = { getImage, getScaledImage: getScaledImage_1.default };
+exports.default = createScaledImage;

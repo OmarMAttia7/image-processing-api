@@ -13,37 +13,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const images_1 = __importDefault(require("../../services/images"));
-const sharp_1 = __importDefault(require("sharp"));
 function getScaledImage(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const width = req.query.width;
         const height = req.query.height;
+        const imageName = req.params.image;
         if (typeof width === "string" && typeof height === "string") {
             // Parse width and height
             const widthInt = parseInt(width);
             const hegihtInt = parseInt(height);
+            // If they are valid numbers respond with the scaled image
+            if (!Number.isNaN(widthInt) && !Number.isNaN(hegihtInt)) {
+                // Get scaled image name
+                const scaledImageName = `${imageName}@${widthInt}x${hegihtInt}`;
+                // Get scaled image file
+                const imageFile = yield images_1.default.getImageFile(scaledImageName);
+                // If scaled image is not found create it
+                if (imageFile === false) {
+                    // Create scaled image
+                    const scaledImage = yield images_1.default.createScaledImage(imageName, widthInt, hegihtInt);
+                    // Cache scaled image
+                    yield images_1.default.saveImage(scaledImage.file, scaledImage.extension, "scaled", scaledImageName);
+                    res.status(200).set("Content-Type", "image/jpeg").send(scaledImage.file);
+                }
+                else {
+                    res.status(200).set("Content-Type", "image/jpeg").send(imageFile.file);
+                }
+            }
             // If they are not valid numbers respond with error 400
-            if (Number.isNaN(widthInt) || Number.isNaN(hegihtInt)) {
+            else {
                 res
                     .status(400)
                     .send("Error 400: Incorrect syntax, width and height should be valid numbers");
-            }
-            // If they are valid numbers respond with the scaled image
-            else {
-                // Get image file
-                const imageFile = yield images_1.default.getImageFile(`${req.params.image}@${widthInt}x${hegihtInt}`);
-                // If image is not found create scaled image
-                if (imageFile === false) {
-                    // Get original image
-                    const originalImage = yield images_1.default.getImageFile(req.params.image);
-                    // Scale original image
-                    if (originalImage !== false) {
-                        const scaledImage = yield (0, sharp_1.default)(originalImage.file)
-                            .resize(widthInt, hegihtInt)
-                            .toBuffer();
-                        res.status(200).set('Content-Type', 'image/jpeg').send(scaledImage);
-                    }
-                }
             }
         }
         // If width and height are present but not strings for some reason

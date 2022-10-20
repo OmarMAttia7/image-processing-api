@@ -1,7 +1,6 @@
 import imagesConfig from '../../configs/images';
 import fs from 'fs/promises';
-
-type imageType = "original" | "scaled";
+import { imageType } from './types';
 
 // Check if image exists and return extension
 async function searchForImage(

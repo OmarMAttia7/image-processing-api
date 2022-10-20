@@ -14,30 +14,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const images_1 = __importDefault(require("../../services/images"));
 const mime_types_1 = __importDefault(require("mime-types"));
-function getFullImage(req, res) {
+// Get original image
+// This function assumes the existence of the image has already been verified
+function getOriginalImage(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Get image file
-            const imageFile = yield images_1.default.getImageFile(req.params.image);
-            // If image is not found
-            if (imageFile === false) {
-                res.status(404).send("Image not found");
-            }
-            // If image is found
-            else {
-                // Look up image file extension
-                const contentType = mime_types_1.default.lookup(imageFile.extension);
-                // If image file extension is unkown throw error which will return error 500
-                // This counts as a server error since the server should be reponsible for verifying extensions
-                if (contentType === false)
-                    throw Error("Unkown file extension");
-                //
-                res.status(200).set("Content-Type", contentType).send(imageFile.file);
-            }
+            const imageFile = (yield images_1.default.getImageFile(req.params.image));
+            // Look up image file extension
+            const contentType = mime_types_1.default.lookup(imageFile.extension);
+            // If image file extension is unknown throw error which will get caught and return error 500
+            // This counts as a server error since the server should be reponsible for verifying extensions on upload
+            if (contentType === false)
+                throw Error("Unkown file extension");
+            // Return image file with correct content type
+            res.status(200).set("Content-Type", contentType).send(imageFile.file);
         }
         catch (e) {
             res.status(500).send("Error 500: Internal server error.");
         }
     });
 }
-exports.default = getFullImage;
+exports.default = getOriginalImage;
