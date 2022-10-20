@@ -14,14 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
-const imagesDir = path_1.default.resolve(__dirname, "../../../assets/images/full");
+const imagesDir = {
+    full: path_1.default.resolve(__dirname, "../../../assets/images/full"),
+    thumbs: path_1.default.resolve(__dirname, "../../../assets/images/thumbs"),
+};
 // Check if image exists and return extension
 function searchForImage(image) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            // Check if image is original or scaled
+            let type;
+            let targetDir;
+            if (image.includes("@")) {
+                targetDir = imagesDir.thumbs;
+                type = "scaled";
+            }
+            else {
+                targetDir = imagesDir.full;
+                type = "original";
+            }
             // Read images directory
-            const imagesArr = yield promises_1.default.readdir(imagesDir);
-            // Check if image exists and save extension
+            const imagesArr = yield promises_1.default.readdir(targetDir);
+            // Check if image exists
             const filteredImageArr = imagesArr.filter((imageFileName) => {
                 const extensionIndex = imageFileName.lastIndexOf(".");
                 const imageName = imageFileName.substring(0, extensionIndex);
@@ -36,21 +50,23 @@ function searchForImage(image) {
                 const requestedImage = filteredImageArr[0];
                 return {
                     exists: true,
-                    extension: requestedImage.substring(requestedImage.lastIndexOf('.'))
+                    extension: requestedImage.substring(requestedImage.lastIndexOf(".") + 1),
+                    type,
                 };
             }
             // If image doesn't exist return exists: false
             return {
-                exists: false
+                exists: false,
             };
         }
         catch (e) {
             return {
-                exists: false
+                exists: false,
             };
         }
     });
 }
+//
 function getImageFile(image) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -58,8 +74,17 @@ function getImageFile(image) {
             const imageInfo = yield searchForImage(image);
             if (!imageInfo.exists || imageInfo.extension === undefined)
                 return false;
-            const imageFile = yield promises_1.default.readFile(`${imagesDir}/${image}.${imageInfo.extension}`);
-            return imageFile;
+            // Check if image is original or scaled
+            let targetDir;
+            if (imageInfo.type === "scaled") {
+                targetDir = imagesDir.thumbs;
+            }
+            else {
+                targetDir = imagesDir.full;
+            }
+            // Get image file
+            const imageFile = yield promises_1.default.readFile(`${targetDir}/${image}.${imageInfo.extension}`);
+            return { file: imageFile, extension: imageInfo.extension };
         }
         catch (e) {
             return false;

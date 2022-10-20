@@ -12,24 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const getFullImage_1 = __importDefault(require("./getFullImage"));
-const getScaledImage_1 = __importDefault(require("./getScaledImage"));
-function getImage(req, res) {
+const images_1 = __importDefault(require("../../services/images"));
+const mime_types_1 = __importDefault(require("mime-types"));
+function getFullImage(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const width = req.query.width;
-        const height = req.query.height;
         try {
-            // If width and height parameters are not present
-            // return full image
-            if (width === undefined || height === undefined) {
-                return yield (0, getFullImage_1.default)(req, res);
+            // Get image file
+            const imageFile = yield images_1.default.getImageFile(req.params.image);
+            // If image is not found
+            if (imageFile === false) {
+                res.status(404).send("Image not found");
             }
-            // If width and height are present
-            return yield (0, getScaledImage_1.default)(req, res);
+            // If image is found
+            else {
+                // Look up image file extension
+                const contentType = mime_types_1.default.lookup(imageFile.extension);
+                // If image file extension is unkown throw error which will return error 500
+                // This counts as a server error since the server should be reponsible for verifying extensions
+                if (contentType === false)
+                    throw Error("Unkown file extension");
+                //
+                res.status(200).set("Content-Type", contentType).send(imageFile.file);
+            }
         }
         catch (e) {
             res.status(500).send("Error 500: Internal server error.");
         }
     });
 }
-exports.default = { getImage };
+exports.default = getFullImage;
