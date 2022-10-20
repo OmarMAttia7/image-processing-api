@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const promises_1 = __importDefault(require("fs/promises"));
 const images_1 = __importDefault(require("../../../api/configs/images"));
 const images_2 = require("../../../api/services/images");
-const parseDimensions_1 = __importDefault(require("../../../api/services/images/parseDimensions"));
+const image_size_1 = __importDefault(require("image-size"));
 describe("Image methods", () => __awaiter(void 0, void 0, void 0, function* () {
     let imageName;
     let imageExtension;
@@ -27,6 +27,15 @@ describe("Image methods", () => __awaiter(void 0, void 0, void 0, function* () {
         imageExtension = fullImagesDir[0].substring(fullImagesDir[0].lastIndexOf(".") + 1);
         imageFile = yield promises_1.default.readFile(`${images_1.default.dir.full}/${imageName}.${imageExtension}`);
     }));
+    describe("resizeImage()", () => {
+        it("resizes image corretly", () => __awaiter(void 0, void 0, void 0, function* () {
+            const resizedImage = yield (0, images_2.resizeImage)(imageName, 100, 100);
+            const actualDimensions = (0, image_size_1.default)(resizedImage.file);
+            expect(resizedImage.file).toBeInstanceOf(Buffer);
+            expect(actualDimensions.width).toEqual(100);
+            expect(actualDimensions.height).toEqual(100);
+        }));
+    });
     describe("searchForImage()", () => __awaiter(void 0, void 0, void 0, function* () {
         it("verifies if image exists", () => __awaiter(void 0, void 0, void 0, function* () {
             expect(yield (0, images_2.searchForImage)(imageName)).toEqual({
@@ -54,12 +63,12 @@ describe("Image methods", () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     describe("parseDimensions()", () => {
         it("parses width and height correctly", () => {
-            expect((0, parseDimensions_1.default)("100", "100")).toEqual({ width: 100, height: 100 });
+            expect((0, images_2.parseDimensions)("100", "100")).toEqual({ width: 100, height: 100 });
         });
         it("returns false if inputs are not valid", () => {
-            expect((0, parseDimensions_1.default)("stringwidth", "100")).toBeFalse();
-            expect((0, parseDimensions_1.default)("100", "stringheight")).toBeFalse();
-            expect((0, parseDimensions_1.default)("stringwidth", "stringheight")).toBeFalse();
+            expect((0, images_2.parseDimensions)("stringwidth", "100")).toBeFalse();
+            expect((0, images_2.parseDimensions)("100", "stringheight")).toBeFalse();
+            expect((0, images_2.parseDimensions)("stringwidth", "stringheight")).toBeFalse();
         });
     });
 }));

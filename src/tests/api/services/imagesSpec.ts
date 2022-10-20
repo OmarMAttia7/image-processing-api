@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import imagesConfig from "../../../api/configs/images";
-import { searchForImage, getImageFile } from "../../../api/services/images";
-import parseDimensions from "../../../api/services/images/parseDimensions";
+import { searchForImage, getImageFile, resizeImage, parseDimensions } from "../../../api/services/images";
+import imageSize from 'image-size';
 
 describe("Image methods", async () => {
   let imageName: string;
@@ -21,6 +21,18 @@ describe("Image methods", async () => {
     );
 
     imageFile = await fs.readFile(`${imagesConfig.dir.full}/${imageName}.${imageExtension}`);
+  });
+
+  describe("resizeImage()", () => {
+    it("resizes image corretly", async () => {
+      const resizedImage = await resizeImage(imageName, 100, 100);
+      const actualDimensions = imageSize(resizedImage.file);
+
+      expect(resizedImage.file).toBeInstanceOf(Buffer);
+      
+      expect(actualDimensions.width).toEqual(100);
+      expect(actualDimensions.height).toEqual(100);
+    });
   });
 
   describe("searchForImage()", async () => {
@@ -64,4 +76,5 @@ describe("Image methods", async () => {
       expect(parseDimensions("stringwidth", "stringheight")).toBeFalse();
     })
   });
+
 });
