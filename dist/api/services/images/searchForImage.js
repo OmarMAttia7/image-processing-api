@@ -12,12 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const images_1 = __importDefault(require("../../configs/images"));
 const promises_1 = __importDefault(require("fs/promises"));
-const path_1 = __importDefault(require("path"));
-const imagesDir = {
-    full: path_1.default.resolve(__dirname, "../../../assets/images/full"),
-    thumbs: path_1.default.resolve(__dirname, "../../../assets/images/thumbs"),
-};
 // Check if image exists and return extension
 function searchForImage(image) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -26,11 +22,11 @@ function searchForImage(image) {
             let type;
             let targetDir;
             if (image.includes("@")) {
-                targetDir = imagesDir.thumbs;
+                targetDir = images_1.default.dir.thumbs;
                 type = "scaled";
             }
             else {
-                targetDir = imagesDir.full;
+                targetDir = images_1.default.dir.full;
                 type = "original";
             }
             // Read images directory
@@ -66,29 +62,4 @@ function searchForImage(image) {
         }
     });
 }
-//
-function getImageFile(image) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // Check if image exists
-            const imageInfo = yield searchForImage(image);
-            if (!imageInfo.exists || imageInfo.extension === undefined)
-                return false;
-            // Check if image is original or scaled
-            let targetDir;
-            if (imageInfo.type === "scaled") {
-                targetDir = imagesDir.thumbs;
-            }
-            else {
-                targetDir = imagesDir.full;
-            }
-            // Get image file
-            const imageFile = yield promises_1.default.readFile(`${targetDir}/${image}.${imageInfo.extension}`);
-            return { file: imageFile, extension: imageInfo.extension };
-        }
-        catch (e) {
-            return false;
-        }
-    });
-}
-exports.default = { getImageFile };
+exports.default = searchForImage;

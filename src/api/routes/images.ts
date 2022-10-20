@@ -1,5 +1,6 @@
 import { Router } from "express";
 import imagesController from "../controllers/images";
+import imagesMiddleware from "../middleware/images";
 
 const router = Router();
 
@@ -12,6 +13,8 @@ router.get("/images", (req, res) => {
 });
 
 //  GET specific image
-router.get("/images/:image", imagesController.getImage);
+router.get("/images/:image", imagesMiddleware.findImage, imagesController.getImage);
+
+router.get("/images/:image", imagesMiddleware.findImage, imagesController.getScaledImage);
 
 export default router;

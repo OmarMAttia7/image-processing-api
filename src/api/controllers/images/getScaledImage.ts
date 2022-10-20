@@ -19,6 +19,7 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
           "Error 400: Incorrect syntax, width and height should be valid numbers"
         );
     }
+
     // If they are valid numbers respond with the scaled image
     else {
       // Get image file
@@ -26,14 +27,15 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
         `${req.params.image}@${widthInt}x${hegihtInt}`
       );
 
-      // If image is not found
+      // If image is not found create scaled image
       if (imageFile === false) {
+        // Get original image
         const originalImage = await imagesService.getImageFile(
           req.params.image
         );
-        if (originalImage === false) {
-          res.status(404).send("Image not found");
-        } else {
+        
+        // Scale original image
+        if (originalImage !== false) {
           const scaledImage = await sharp(originalImage.file)
             .resize(widthInt, hegihtInt)
             .toBuffer();

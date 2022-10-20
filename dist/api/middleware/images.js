@@ -12,24 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const getFullImage_1 = __importDefault(require("./getFullImage"));
-const getScaledImage_1 = __importDefault(require("./getScaledImage"));
-function getImage(req, res, next) {
+const images_1 = __importDefault(require("../services/images"));
+function findImage(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const width = req.query.width;
-        const height = req.query.height;
         try {
-            // If width or height parameters are not present
-            // return full image
-            if (width === undefined || height === undefined) {
-                return yield (0, getFullImage_1.default)(req, res);
+            const imageInfo = yield images_1.default.searchForImage(req.params.image);
+            if (!imageInfo.exists) {
+                res.status(404).send("Image not found");
             }
-            // If width and height are present
-            next('route');
+            else {
+                next();
+            }
         }
         catch (e) {
             res.status(500).send("Error 500: Internal server error.");
         }
     });
 }
-exports.default = { getImage, getScaledImage: getScaledImage_1.default };
+exports.default = { findImage };

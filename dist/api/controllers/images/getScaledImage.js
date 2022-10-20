@@ -32,13 +32,12 @@ function getScaledImage(req, res) {
             else {
                 // Get image file
                 const imageFile = yield images_1.default.getImageFile(`${req.params.image}@${widthInt}x${hegihtInt}`);
-                // If image is not found
+                // If image is not found create scaled image
                 if (imageFile === false) {
+                    // Get original image
                     const originalImage = yield images_1.default.getImageFile(req.params.image);
-                    if (originalImage === false) {
-                        res.status(404).send("Image not found");
-                    }
-                    else {
+                    // Scale original image
+                    if (originalImage !== false) {
                         const scaledImage = yield (0, sharp_1.default)(originalImage.file)
                             .resize(widthInt, hegihtInt)
                             .toBuffer();

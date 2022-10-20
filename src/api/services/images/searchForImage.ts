@@ -1,10 +1,5 @@
-import fs from "fs/promises";
-import path from "path";
-
-const imagesDir = {
-  full: path.resolve(__dirname, "../../../assets/images/full"),
-  thumbs: path.resolve(__dirname, "../../../assets/images/thumbs"),
-};
+import imagesConfig from '../../configs/images';
+import fs from 'fs/promises';
 
 type imageType = "original" | "scaled";
 
@@ -17,10 +12,10 @@ async function searchForImage(
     let type: imageType;
     let targetDir: string;
     if (image.includes("@")) {
-      targetDir = imagesDir.thumbs;
+      targetDir = imagesConfig.dir.thumbs;
       type = "scaled";
     } else {
-      targetDir = imagesDir.full;
+      targetDir = imagesConfig.dir.full;
       type = "original";
     }
 
@@ -62,32 +57,4 @@ async function searchForImage(
   }
 }
 
-//
-async function getImageFile(
-  image: string
-): Promise<{ file: Buffer; extension: string } | false> {
-  try {
-    // Check if image exists
-    const imageInfo = await searchForImage(image);
-    if (!imageInfo.exists || imageInfo.extension === undefined) return false;
-
-    // Check if image is original or scaled
-    let targetDir: string;
-    if (imageInfo.type === "scaled") {
-      targetDir = imagesDir.thumbs;
-    } else {
-      targetDir = imagesDir.full;
-    }
-
-    // Get image file
-    const imageFile = await fs.readFile(
-      `${targetDir}/${image}.${imageInfo.extension}`
-    );
-
-    return { file: imageFile, extension: imageInfo.extension };
-  } catch (e) {
-    return false;
-  }
-}
-
-export default { getImageFile };
+export default searchForImage;

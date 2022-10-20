@@ -12,24 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const getFullImage_1 = __importDefault(require("./getFullImage"));
-const getScaledImage_1 = __importDefault(require("./getScaledImage"));
-function getImage(req, res, next) {
+const promises_1 = __importDefault(require("fs/promises"));
+const images_1 = __importDefault(require("../../configs/images"));
+const searchForImage_1 = __importDefault(require("./searchForImage"));
+function getImageFile(image) {
     return __awaiter(this, void 0, void 0, function* () {
-        const width = req.query.width;
-        const height = req.query.height;
         try {
-            // If width or height parameters are not present
-            // return full image
-            if (width === undefined || height === undefined) {
-                return yield (0, getFullImage_1.default)(req, res);
+            // Check if image exists
+            const imageInfo = yield (0, searchForImage_1.default)(image);
+            if (!imageInfo.exists || imageInfo.extension === undefined)
+                return false;
+            // Check if image is original or scaled
+            let targetDir;
+            if (imageInfo.type === "scaled") {
+                targetDir = images_1.default.dir.thumbs;
             }
-            // If width and height are present
-            next('route');
+            else {
+                targetDir = images_1.default.dir.full;
+            }
+            // Get image file
+            const imageFile = yield promises_1.default.readFile(`${targetDir}/${image}.${imageInfo.extension}`);
+            // Return image file and extension
+            return { file: imageFile, extension: imageInfo.extension };
         }
         catch (e) {
-            res.status(500).send("Error 500: Internal server error.");
+            return false;
         }
     });
 }
-exports.default = { getImage, getScaledImage: getScaledImage_1.default };
+exports.default = getImageFile;
