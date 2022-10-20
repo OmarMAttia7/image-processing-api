@@ -18,6 +18,8 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
       .send(
         "Error 400: Incorrect syntax, width and height should be valid numbers"
       );
+
+      return;
   }
 
   // Get width and height

@@ -27,6 +27,7 @@ function getScaledImage(req, res) {
             res
                 .status(400)
                 .send("Error 400: Incorrect syntax, width and height should be valid numbers");
+            return;
         }
         // Get width and height
         const { width, height } = parsedDimensions;
@@ -34,9 +35,9 @@ function getScaledImage(req, res) {
         const scaledImageName = `${imageName}@${width}x${height}`;
         try {
             // Get scaled image file
-            const imageFile = yield images_1.default.getImageFile(scaledImageName);
-            // If scaled image is not found create, cache and serve it
-            if (imageFile === false) {
+            const cachedImageFile = yield images_1.default.getImageFile(scaledImageName);
+            // If cached image is not found create, cache and serve it
+            if (cachedImageFile === false) {
                 // Create scaled image
                 const scaledImage = yield images_1.default.createScaledImage(imageName, width, height);
                 // Cache scaled image
@@ -49,8 +50,9 @@ function getScaledImage(req, res) {
             // If scaled image is found
             else {
                 // Get image Content-Type
-                const contentType = (0, getContentType_1.default)(imageFile.extension);
-                res.status(200).set("Content-Type", contentType).send(imageFile.file);
+                const contentType = (0, getContentType_1.default)(cachedImageFile.extension);
+                // Respond with scaled image
+                res.status(200).set("Content-Type", contentType).send(cachedImageFile.file);
             }
         }
         catch (e) {
