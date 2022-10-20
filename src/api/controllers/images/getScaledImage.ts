@@ -1,50 +1,71 @@
 import { Request, Response } from "express";
+import getContentType from "../../../utilities/getContentType";
 import imagesService from "../../services/images";
+import parseDimensions from "../../services/images/parseDimensions";
 
 async function getScaledImage(req: Request, res: Response): Promise<void> {
-  const width = req.query.width;
-  const height = req.query.height;
+  const queryWidth = req.query.width;
+  const queryHeight = req.query.height;
   const imageName = req.params.image;
-  if (typeof width === "string" && typeof height === "string") {
-    // Parse width and height
-    const widthInt = parseInt(width);
-    const hegihtInt = parseInt(height);
 
-    // If they are valid numbers respond with the scaled image
-    if (!Number.isNaN(widthInt) && !Number.isNaN(hegihtInt)) {
-      // Get scaled image name
-      const scaledImageName = `${imageName}@${widthInt}x${hegihtInt}`
+  // Parse width and height
+  const parsedDimensions = parseDimensions(queryWidth, queryHeight);
 
-      // Get scaled image file
-      const imageFile = await imagesService.getImageFile(
+  // If they are not valid numbers respond with 400
+  if (parsedDimensions === false) {
+    res
+      .status(400)
+      .send(
+        "Error 400: Incorrect syntax, width and height should be valid numbers"
+      );
+  }
+
+  // Get width and height
+  const { width, height } = parsedDimensions as {
+    width: number;
+    height: number;
+  };
+
+  // Get scaled image name
+  const scaledImageName = `${imageName}@${width}x${height}`;
+
+  try {
+    // Get scaled image file
+    const imageFile = await imagesService.getImageFile(scaledImageName);
+
+    // If scaled image is not found create, cache and serve it
+    if (imageFile === false) {
+      // Create scaled image
+      const scaledImage = await imagesService.createScaledImage(
+        imageName,
+        width,
+        height
+      );
+
+      // Cache scaled image
+      await imagesService.saveImage(
+        scaledImage.file,
+        scaledImage.extension,
+        "scaled",
         scaledImageName
       );
 
-      // If scaled image is not found create it
-      if (imageFile === false) {
-        // Create scaled image
-        const scaledImage = await imagesService.createScaledImage(imageName, widthInt, hegihtInt);
+      // Get image Content-Type
+      const contentType = getContentType(scaledImage.extension);
 
-        // Cache scaled image
-        await imagesService.saveImage(scaledImage.file, scaledImage.extension, "scaled", scaledImageName)
-
-        res.status(200).set("Content-Type", "image/jpeg").send(scaledImage.file);
-      }else{
-        res.status(200).set("Content-Type", "image/jpeg").send(imageFile.file)
-      }
+      // Respond with scaled image
+      res.status(200).set("Content-Type", contentType).send(scaledImage.file);
     }
-    // If they are not valid numbers respond with error 400
+
+    // If scaled image is found
     else {
-      res
-        .status(400)
-        .send(
-          "Error 400: Incorrect syntax, width and height should be valid numbers"
-        );
+      // Get image Content-Type
+      const contentType = getContentType(imageFile.extension);
+      res.status(200).set("Content-Type", contentType).send(imageFile.file);
     }
-  }
-  // If width and height are present but not strings for some reason
-  else {
-    res.status(500).send("Error 500: Internal server error.");
+    
+  } catch (e) {
+    res.status(500).send("Internal server error");
   }
 }
 

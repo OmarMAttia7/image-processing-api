@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const images_1 = __importDefault(require("../../services/images"));
-const mime_types_1 = __importDefault(require("mime-types"));
+const getContentType_1 = __importDefault(require("../../../utilities/getContentType"));
 // Get original image
 // This function assumes the existence of the image has already been verified
 function getOriginalImage(req, res) {
@@ -21,12 +21,8 @@ function getOriginalImage(req, res) {
         try {
             // Get image file
             const imageFile = (yield images_1.default.getImageFile(req.params.image));
-            // Look up image file extension
-            const contentType = mime_types_1.default.lookup(imageFile.extension);
-            // If image file extension is unknown throw error which will get caught and return error 500
-            // This counts as a server error since the server should be reponsible for verifying extensions on upload
-            if (contentType === false)
-                throw Error("Unkown file extension");
+            // Get image Content-Type
+            const contentType = (0, getContentType_1.default)(imageFile.extension);
             // Return image file with correct content type
             res.status(200).set("Content-Type", contentType).send(imageFile.file);
         }
