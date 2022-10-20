@@ -59,7 +59,7 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
       res.status(200).set("Content-Type", contentType).send(scaledImage.file);
     }
 
-    // If scaled image is found
+    // If cached image is found
     else {
       // Get image Content-Type
       const contentType = getContentType(cachedImageFile.extension);
