@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const api_1 = __importDefault(require("../../api"));
-describe("/api/images", () => {
+const api_1 = __importDefault(require("../../../api"));
+describe("/api/images endpoint", () => {
     const requset = (0, supertest_1.default)(api_1.default);
     it("responds with status 200", () => __awaiter(void 0, void 0, void 0, function* () {
         yield requset.get("/api/images").expect(200);
@@ -32,18 +32,16 @@ describe("/api/images", () => {
     it("responds with status 404 if image is not found", () => __awaiter(void 0, void 0, void 0, function* () {
         yield requset.get("/api/images/doesntexist").expect(404);
     }));
-    it("responds with scaled image", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("responds with resized image", () => __awaiter(void 0, void 0, void 0, function* () {
         yield requset
             .get("/api/images/fjord?width=100&height=100")
             .expect(200)
             .expect("Content-Type", /image/);
     }));
-    it("correctly handles invalid widths", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("responds with status 400 if query parameters are invalid", () => __awaiter(void 0, void 0, void 0, function* () {
         yield requset
             .get("/api/images/fjord?width=stringWidth&height=100")
             .expect(400);
-    }));
-    it("correctly handles invalid heights", () => __awaiter(void 0, void 0, void 0, function* () {
         yield requset
             .get("/api/images/fjord?width=100&height=stringHeight")
             .expect(400);

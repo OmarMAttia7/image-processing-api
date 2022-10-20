@@ -1,7 +1,7 @@
 import supertest from "supertest";
-import app from "../../api";
+import app from "../../../api";
 
-describe("/api/images", () => {
+describe("/api/images endpoint", () => {
   const requset = supertest(app);
 
   it("responds with status 200", async () => {
@@ -23,20 +23,18 @@ describe("/api/images", () => {
     await requset.get("/api/images/doesntexist").expect(404);
   });
 
-  it("responds with scaled image", async () => {
+  it("responds with resized image", async () => {
     await requset
       .get("/api/images/fjord?width=100&height=100")
       .expect(200)
       .expect("Content-Type", /image/);
   });
 
-  it("correctly handles invalid widths", async () => {
+  it("responds with status 400 if query parameters are invalid", async () => {
     await requset
       .get("/api/images/fjord?width=stringWidth&height=100")
       .expect(400);
-  });
 
-  it("correctly handles invalid heights", async () => {
     await requset
       .get("/api/images/fjord?width=100&height=stringHeight")
       .expect(400);
