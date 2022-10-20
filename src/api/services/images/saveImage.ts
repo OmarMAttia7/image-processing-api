@@ -15,11 +15,7 @@ async function saveImage(
     targetDir = imagesConfig.dir.thumbs;
   }
 
-  await fs.writeFile(
-    `${targetDir}/${imageName}.${imageExtension}`,
-    imageFile
-  );
-
+  await fs.writeFile(`${targetDir}/${imageName}.${imageExtension}`, imageFile);
 }
 
 export default saveImage;

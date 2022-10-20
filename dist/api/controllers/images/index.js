@@ -25,7 +25,7 @@ function getImage(req, res, next) {
                 return yield (0, getOriginalImage_1.default)(req, res);
             }
             // If width and height parameters are present
-            next('route');
+            next("route");
         }
         catch (e) {
             res.status(500).send("Error 500: Internal server error.");

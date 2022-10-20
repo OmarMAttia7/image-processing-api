@@ -1,6 +1,6 @@
-import imagesConfig from '../../configs/images';
-import fs from 'fs/promises';
-import { imageType } from './types';
+import imagesConfig from "../../configs/images";
+import fs from "fs/promises";
+import { imageType } from "./types";
 
 // Check if image exists and return extension
 async function searchForImage(

@@ -1,3 +1,3 @@
 type imageType = "original" | "scaled";
 
-export {imageType};
+export { imageType };

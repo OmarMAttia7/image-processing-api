@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import getOriginalImage from "./getOriginalImage";
 import getScaledImage from "./getScaledImage";
 
-async function getImage(req: Request, res: Response, next: NextFunction): Promise<void> {
+async function getImage(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const width = req.query.width;
   const height = req.query.height;
   try {
@@ -13,7 +17,7 @@ async function getImage(req: Request, res: Response, next: NextFunction): Promis
     }
 
     // If width and height parameters are present
-    next('route');
+    next("route");
   } catch (e) {
     res.status(500).send("Error 500: Internal server error.");
   }

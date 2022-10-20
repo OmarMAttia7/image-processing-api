@@ -12,9 +12,18 @@ router.get("/images", (req, res) => {
   );
 });
 
-//  GET specific image
-router.get("/images/:image", imagesMiddleware.findImage, imagesController.getImage);
+//  GET original image
+router.get(
+  "/images/:image",
+  imagesMiddleware.findImage,
+  imagesController.getImage
+);
 
-router.get("/images/:image", imagesMiddleware.findImage, imagesController.getScaledImage);
+// GET resized image
+router.get(
+  "/images/:image",
+  imagesMiddleware.findImage,
+  imagesController.getScaledImage
+);
 
 export default router;

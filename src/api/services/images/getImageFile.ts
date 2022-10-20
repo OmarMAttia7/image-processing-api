@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import imagesConfig from '../../configs/images';
+import imagesConfig from "../../configs/images";
 import searchForImage from "./searchForImage";
 
 async function getImageFile(

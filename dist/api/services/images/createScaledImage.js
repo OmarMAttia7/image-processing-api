@@ -25,7 +25,7 @@ function createScaledImage(image, width, height) {
         // Return file and extension
         return {
             file: scaledImage,
-            extension: originalImage.extension
+            extension: originalImage.extension,
         };
     });
 }

@@ -5,4 +5,4 @@ const dir = {
   thumbs: path.join(__dirname, "../../../assets/images/thumbs"),
 };
 
-export default {dir}
+export default { dir };
