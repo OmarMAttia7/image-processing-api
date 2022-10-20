@@ -1,7 +1,7 @@
 import searchForImage from "./searchForImage";
 import getImageFile from "./getImageFile";
 import saveImage from "./saveImage";
-import createScaledImage from "./createScaledImage";
+import resizeImage from "./resizeImage";
 
-export default { getImageFile, searchForImage, saveImage, createScaledImage };
-export { getImageFile, searchForImage, saveImage, createScaledImage };
+export default { getImageFile, searchForImage, saveImage, resizeImage };
+export { getImageFile, searchForImage, saveImage, resizeImage };

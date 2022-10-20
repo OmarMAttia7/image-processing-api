@@ -1,7 +1,7 @@
 import getImageFile from "./getImageFile";
 import sharp from "sharp";
 
-async function createScaledImage(
+async function resizeImage(
   image: string,
   width: number,
   height: number
@@ -12,7 +12,7 @@ async function createScaledImage(
     extension: string;
   };
 
-  // Scale original image
+  // Resize original image
   const scaledImage = await sharp(originalImage.file)
     .resize(width, height)
     .toBuffer();
@@ -24,4 +24,4 @@ async function createScaledImage(
   };
 }
 
-export default createScaledImage;
+export default resizeImage;

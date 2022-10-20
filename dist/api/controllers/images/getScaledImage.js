@@ -39,7 +39,7 @@ function getScaledImage(req, res) {
             // If cached image is not found create, cache and serve it
             if (cachedImageFile === false) {
                 // Create scaled image
-                const scaledImage = yield images_1.default.createScaledImage(imageName, width, height);
+                const scaledImage = yield images_1.default.resizeImage(imageName, width, height);
                 // Cache scaled image
                 yield images_1.default.saveImage(scaledImage.file, scaledImage.extension, "scaled", scaledImageName);
                 // Get image Content-Type
@@ -47,7 +47,7 @@ function getScaledImage(req, res) {
                 // Respond with scaled image
                 res.status(200).set("Content-Type", contentType).send(scaledImage.file);
             }
-            // If scaled image is found
+            // If cached image is found
             else {
                 // Get image Content-Type
                 const contentType = (0, getContentType_1.default)(cachedImageFile.extension);

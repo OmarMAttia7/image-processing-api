@@ -38,7 +38,7 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
     // If cached image is not found create, cache and serve it
     if (cachedImageFile === false) {
       // Create scaled image
-      const scaledImage = await imagesService.createScaledImage(
+      const scaledImage = await imagesService.resizeImage(
         imageName,
         width,
         height

@@ -14,11 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const getImageFile_1 = __importDefault(require("./getImageFile"));
 const sharp_1 = __importDefault(require("sharp"));
-function createScaledImage(image, width, height) {
+function resizeImage(image, width, height) {
     return __awaiter(this, void 0, void 0, function* () {
         // Get original image
         const originalImage = (yield (0, getImageFile_1.default)(image));
-        // Scale original image
+        // Resize original image
         const scaledImage = yield (0, sharp_1.default)(originalImage.file)
             .resize(width, height)
             .toBuffer();
@@ -29,4 +29,4 @@ function createScaledImage(image, width, height) {
         };
     });
 }
-exports.default = createScaledImage;
+exports.default = resizeImage;
