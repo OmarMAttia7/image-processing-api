@@ -14,14 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const getContentType_1 = __importDefault(require("../../../utilities/getContentType"));
 const images_1 = __importDefault(require("../../services/images"));
-const parseDimensions_1 = __importDefault(require("../../services/images/parseDimensions"));
 function getScaledImage(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryWidth = req.query.width;
         const queryHeight = req.query.height;
         const imageName = req.params.image;
         // Parse width and height
-        const parsedDimensions = (0, parseDimensions_1.default)(queryWidth, queryHeight);
+        const parsedDimensions = images_1.default.parseDimensions(queryWidth, queryHeight);
         // If they are not valid numbers respond with 400
         if (parsedDimensions === false) {
             res

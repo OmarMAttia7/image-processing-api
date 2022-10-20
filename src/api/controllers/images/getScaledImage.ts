@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import getContentType from "../../../utilities/getContentType";
 import imagesService from "../../services/images";
-import parseDimensions from "../../services/images/parseDimensions";
 
 async function getScaledImage(req: Request, res: Response): Promise<void> {
   const queryWidth = req.query.width;
@@ -9,7 +8,7 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
   const imageName = req.params.image;
 
   // Parse width and height
-  const parsedDimensions = parseDimensions(queryWidth, queryHeight);
+  const parsedDimensions = imagesService.parseDimensions(queryWidth, queryHeight);
 
   // If they are not valid numbers respond with 400
   if (parsedDimensions === false) {
