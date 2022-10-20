@@ -31,10 +31,10 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
 
   try {
     // Get scaled image file
-    const imageFile = await imagesService.getImageFile(scaledImageName);
+    const cachedImageFile = await imagesService.getImageFile(scaledImageName);
 
-    // If scaled image is not found create, cache and serve it
-    if (imageFile === false) {
+    // If cached image is not found create, cache and serve it
+    if (cachedImageFile === false) {
       // Create scaled image
       const scaledImage = await imagesService.createScaledImage(
         imageName,
@@ -60,8 +60,10 @@ async function getScaledImage(req: Request, res: Response): Promise<void> {
     // If scaled image is found
     else {
       // Get image Content-Type
-      const contentType = getContentType(imageFile.extension);
-      res.status(200).set("Content-Type", contentType).send(imageFile.file);
+      const contentType = getContentType(cachedImageFile.extension);
+
+      // Respond with scaled image
+      res.status(200).set("Content-Type", contentType).send(cachedImageFile.file);
     }
     
   } catch (e) {
