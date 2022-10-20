@@ -15,5 +15,8 @@
         "project": "tsconfig.json"
     },
     "rules": {
+        // This is a known issue, express misuses promises at routers
+        // it will eventually be fixed in Express v5
+        "@typescript-eslint/no-misused-promises": "off"
     }
 }
