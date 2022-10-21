@@ -18,6 +18,7 @@ A simple image processing API, made as a submission for Udacity's back-end devel
 You can also start the development server without compiling by running `npm run dev`
 
 <h2 id="testing">Testing</h2>
+
 run `npm run test` to run all tests, you should compile before testing.
 
 The tests cover the functionality of the /api/images endpoint as well as tests for the functions in the api/services directory.
