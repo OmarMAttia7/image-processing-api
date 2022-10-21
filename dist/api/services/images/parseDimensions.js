@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function parseDimensions(widthInput, heightInput) {
     if (typeof widthInput === "string" && typeof heightInput === "string") {
         // Parse width and height
-        const widthInt = parseInt(widthInput);
-        const heightInt = parseInt(heightInput);
+        const widthInt = Number(widthInput);
+        const heightInt = Number(heightInput);
         if (Number.isNaN(widthInt) || Number.isNaN(heightInt)) {
             return false;
         }
