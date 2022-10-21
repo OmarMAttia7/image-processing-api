@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import imagesController from "../controllers/images";
 import imagesMiddleware from "../middleware/findImage";
 
 const router = Router();
 
 //  GET main /images Route
-router.get("/images", (req, res) => {
+router.get("/images", (req: Request, res: Response): void => {
   res.send(
     "request /api/images/{image} to get the full image \n" +
       "or /api/images/:image?width={width}&height={height} to get a scaled image"
