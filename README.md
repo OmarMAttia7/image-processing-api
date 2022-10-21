@@ -21,7 +21,7 @@ The project was made in the current Node LTS version 16.18.0.
 
 <h2 id="testing">Testing</h2>
 
-run `npm run test` to run all tests, you should compile before testing.
+run `npm run test` to run all tests.
 
 The tests cover the functionality of the /api/images endpoint as well as tests for the functions in the api/services directory.
 
