@@ -17,6 +17,8 @@ A simple image processing API, made as a submission for Udacity's back-end devel
 
 You can also start the development server without compiling by running `npm run dev`
 
+The project was made in the current Node LTS version 16.18.0.
+
 <h2 id="testing">Testing</h2>
 
 run `npm run test` to run all tests, you should compile before testing.
