@@ -39,6 +39,6 @@ Request `/api/images/:image?width={width}&height={height}` to get a resized imag
 
 <h2 id="sizes-and-extensions">Multiple Image Sizes and Extensions</h2>
 <h3>Image Sizes</h3>
-The application supports resizing to multiple sizes of the same image.
+<p>The application supports resizing to multiple sizes of the same image.</p>
 <h3>Extensions</h3>
-I have only tested jpgs and pngs, but the application should be able to correctly handle any image format that has a MIME type starting with `image/`
+<p>I have only tested jpgs and pngs, but the application should be able to correctly handle any image format that has a MIME type starting with `image/`</p>
