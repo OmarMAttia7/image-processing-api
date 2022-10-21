@@ -18,10 +18,11 @@ A simple image processing API, made as a submission for Udacity's back-end devel
 You can also start the development server without compiling by running `npm run dev`
 
 <h2 id="testing">Testing</h2>
+run `npm run test` to run all tests, you should compile before testing.
 
-<p>run `npm run test` to run all tests, you should compile before testing.</p>
-<p>The tests cover the functionality of the /api/images endpoint as well as tests for the functions in the api/services directory.</p>
-<p>The `/tests` directory currently compiles inside the `/dist` directory, it should be possible to separate them using another `tsconfig` file but I haven't had the chance to experiment with it yet.</p>
+The tests cover the functionality of the /api/images endpoint as well as tests for the functions in the api/services directory.
+
+The `/tests` directory currently compiles inside the `/dist` directory, it should be possible to separate them using another `tsconfig` file but I haven't had the chance to experiment with it yet.
 
 <h2 id="formatting-and-linting">Formatting and Linting</h2>
 
@@ -39,6 +40,9 @@ Request `/api/images/:image?width={width}&height={height}` to get a resized imag
 
 <h2 id="sizes-and-extensions">Multiple Image Sizes and Extensions</h2>
 <h3>Image Sizes</h3>
-<p>The application supports resizing to multiple sizes of the same image.</p>
+
+The application supports resizing to multiple sizes of the same image.
+
 <h3>Extensions</h3>
-<p>I have only tested jpgs and pngs, but the application should be able to correctly handle any image format that has a MIME type starting with `image/`</p>
+
+I have only tested jpgs and pngs, but the application should be able to correctly handle any image format that has a MIME type starting with `image/`
